@@ -1,0 +1,9 @@
+{"check_interval": 10, 
+"cpu_warning": 75, 
+"cpu_critical": 90, 
+"memory_warning": 80, 
+"memory_critical": 90, 
+"disk_warning": 80, 
+"disk_critical": 90, 
+"log_file": "monitor.log"
+}
