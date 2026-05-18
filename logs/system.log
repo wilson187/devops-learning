@@ -1,0 +1,18 @@
+System monitor started
+CPU check: OK
+Memory check: WARNING
+Disk check: OK
+CPU check: CRITICAL
+Memory check: OK
+Disk check: WARNING
+CPU check: OK
+Memory check: CRITICAL
+Disk check: OK
+CPU check: WARNING
+Memory check: OK
+Disk check: CRITICAL
+CPU check: OK
+2026-05-17 10:07:11 CPU check: CRITICAL
+2026-05-18 12:00:58 
+2026-05-18 12:05:58 Testing execute permission
+2026-05-18 12:09:29 First direct execution
