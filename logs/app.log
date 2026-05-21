@@ -1,0 +1,10 @@
+2026-05-18 08:00:01 INFO web-01 User login successful
+2026-05-18 08:01:23 ERROR web-02 Database connection failed
+2026-05-18 08:02:45 INFO web-01 Page loaded successfully
+2026-05-18 08:03:12 WARN web-03 High memory usage detected
+2026-05-18 08:04:33 ERROR web-01 Timeout connecting to API
+2026-05-18 08:05:01 INFO web-02 User logout successful
+2026-05-18 08:06:44 CRITICAL web-03 Disk full - service stopping
+2026-05-18 08:07:22 ERROR web-02 Authentication failed
+2026-05-18 08:08:55 INFO web-01 Backup completed successfully
+2026-05-18 08:09:11 WARN web-01 CPU usage above 75%
