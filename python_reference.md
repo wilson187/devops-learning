@@ -346,3 +346,380 @@ pip install package   # install a Python library
 6. Read the official docs
 7. Ask for help after 45 minutes
 ```
+==================================================
+## LINUX & BASH COMMANDS
+==================================================
+
+### Navigation
+```bash
+pwd                    # where am I?
+cd foldername          # move into folder
+cd ..                  # go up one level
+cd ~                   # go to home directory
+ls                     # list files
+ls -la                 # list all files with permissions
+```
+
+### Files
+```bash
+touch filename         # create empty file
+cat filename           # print file contents
+head -10 filename      # first 10 lines
+tail -10 filename      # last 10 lines
+tail -f filename       # follow file live — great for logs
+cp file destination    # copy file
+mv file destination    # move or rename file
+rm filename            # delete file
+rm -rf foldername      # delete folder and everything in it — careful
+```
+
+### Writing to files
+```bash
+echo "text" > file     # write — overwrites
+echo "text" >> file    # append — adds to end
+```
+
+### Searching
+```bash
+grep "word" file           # find lines containing word
+grep -i "word" file        # case insensitive
+grep -n "word" file        # show line numbers
+grep -c "word" file        # count matching lines
+grep -A 2 "word" file      # show 2 lines after match
+grep -B 2 "word" file      # show 2 lines before match
+grep -r "word" ./folder    # search recursively in folder
+```
+
+### Pipes — chain commands together
+```bash
+command1 | command2        # output of 1 becomes input of 2
+
+# Real examples
+grep "CRITICAL" monitor.log | wc -l      # count critical lines
+cat monitor.log | tail -20               # last 20 lines
+grep "ERROR" monitor.log | less          # scroll through errors
+ls -la | grep ".py"                      # find python files
+```
+
+### Counting and sorting
+```bash
+wc -l filename             # count lines in file
+wc -w filename             # count words
+sort filename              # sort lines alphabetically
+sort -r filename           # sort in reverse
+uniq filename              # remove duplicate lines
+sort filename | uniq -c    # count occurrences of each line
+```
+
+### Permissions
+```bash
+ls -la                     # see permissions
+chmod +x filename          # add execute permission
+chmod u+x filename         # add execute for owner only
+chmod 755 filename         # rwxr-xr-x
+chmod 644 filename         # rw-r--r--
+```
+
+### Permission string breakdown
+```
+-rwxr-xr-x
+|   |   |   |
+|   |   |   └── others: r-x (read, execute)
+|   |   └─────── group:  r-x (read, execute)
+|   └──────────── owner: rwx (read, write, execute)
+└──────────────── type: - file, d directory
+```
+
+### Bash scripts
+```bash
+#!/bin/bash               # shebang — tells system this is bash
+$1, $2, $3                # arguments passed to script
+$0                        # script name itself
+
+# Check if argument is empty
+if [ -z "$1" ]; then
+    echo "No argument provided"
+    exit 1
+fi
+
+# exit codes
+exit 0                    # success
+exit 1                    # failure
+```
+
+### Timestamps in Bash
+```bash
+date '+%Y-%m-%d %H:%M:%S'              # current timestamp
+echo "$(date '+%Y-%m-%d %H:%M:%S')"    # inline in echo
+```
+
+### System info
+```bash
+whoami                    # current user
+uname -a                  # OS and kernel info
+hostname                  # machine name
+uptime                    # how long system has been running
+df -h                     # disk usage human readable
+free -h                   # memory usage human readable
+top                       # live process monitor — q to quit
+htop                      # better version of top if installed
+```
+==================================================
+## SSH
+==================================================
+
+```bash
+ssh user@server           # connect to remote server
+ssh -i key.pem user@server  # connect with specific key file
+
+# Key files live in ~/.ssh/
+id_ed25519                # private key — never share
+id_ed25519.pub            # public key — put this on servers
+known_hosts               # fingerprints of servers you've connected to
+```
+==================================================
+## PROCESS MANAGEMENT
+==================================================
+
+```bash
+ps aux                     # list all running processes
+ps aux | grep python       # find specific process
+jobs                       # list background jobs in current terminal
+
+# Running in background
+python script.py &                        # run in background, output to terminal
+python script.py > /dev/null 2>&1 &      # run in background, no output
+
+# Killing processes
+kill PID                   # graceful kill
+kill -9 PID               # force kill — use when normal kill fails
+
+# /dev/null explained
+> /dev/null                # discard standard output
+2>&1                       # redirect errors to same place as output
+```
+
+==================================================
+## CRON JOBS
+==================================================
+
+### Cron syntax
+```
+* * * * * command
+| | | | |
+| | | | └── day of week (0-6, 0=Sunday)
+| | | └──── month (1-12)
+| | └────── day of month (1-31)
+| └──────── hour (0-23)
+└────────── minute (0-59)
+```
+
+### Common schedules
+```bash
+*/1 * * * *     # every minute
+*/5 * * * *     # every 5 minutes
+0 * * * *       # every hour
+0 6 * * *       # every day at 6am
+0 9 * * 1       # every Monday at 9am
+0 0 * * *       # every day at midnight
+```
+
+### Managing cron
+```bash
+crontab -l      # list cron jobs
+crontab -e      # edit cron jobs
+crontab -r      # remove all cron jobs — careful
+
+sudo service cron status    # check cron is running
+sudo service cron start     # start cron
+```
+
+### Always use full paths in cron
+```bash
+*/1 * * * * /home/wilson/devops-learning/venv/bin/python3 /home/wilson/devops-learning/system_monitor.py >> /home/wilson/devops-learning/logs/cron.log 2>&1
+```
+
+### Virtual environments
+```bash
+python3 -m venv venv        # create virtual environment
+source venv/bin/activate    # activate it
+deactivate                  # deactivate it
+pip install package         # install inside venv
+which python3               # confirm you're using venv python
+```
+
+### Always add to .gitignore
+```
+venv/pycache__/*.pyc
+```
+==================================================
+## TEXT PROCESSING
+==================================================
+
+### awk — extract specific columns
+```bash
+# Columns are $1, $2, $3 etc split by spaces
+awk '{print $1, $3}' file                     # print columns 1 and 3
+awk '$3 == "ERROR" {print}' file              # filter by column value
+awk '{print $3}' file | sort | uniq -c        # count by column value
+
+# Print from column 5 to end of line
+awk '{printf $1" "$2" "; for(i=5;i<=NF;i++) printf $i" "; print ""}' file
+```
+
+### sed — find and replace
+```bash
+sed 's/old/new/g' file         # replace in output only — file unchanged
+sed -i 's/old/new/g' file     # replace IN the file — no undo, be careful
+```
+
+### cut — extract fields
+```bash
+cut -c1-10 file                # first 10 characters of each line
+cut -d' ' -f3 file            # third field split by space
+```
+
+### sort and count
+```bash
+sort file                      # sort alphabetically
+sort -r file                   # sort in reverse
+sort -rn file                  # sort numeric reverse
+uniq -c file                   # count consecutive duplicates
+sort file | uniq -c | sort -rn # full frequency count — use this constantly
+wc -l file                     # count lines
+wc -w file                     # count words
+```
+
+==================================================
+## SCOPE
+==================================================
+
+```python
+# Global — variable created outside a function, exists everywhere
+# Local  — variable created inside a function, only exists there
+
+count = 0           # global
+
+def increment():
+    global count    # tell Python to use the global one
+    count += 1
+
+# Better approach — return values instead of using global
+def increment(count):
+    return count + 1
+```
+
+==================================================
+## TERNARY EXPRESSION — one line if/else
+==================================================
+
+```python
+# Instead of:
+if args.interval:
+    CHECK_INTERVAL = args.interval
+else:
+    CHECK_INTERVAL = config["check_interval"]
+
+# Write it as:
+CHECK_INTERVAL = args.interval if args.interval else config["check_interval"]
+```
+
+==================================================
+## VIRTUAL ENVIRONMENTS
+==================================================
+
+```bash
+python3 -m venv venv              # create virtual environment
+source venv/bin/activate          # activate — prompt shows (venv)
+deactivate                        # deactivate
+pip install package               # install inside venv
+which python3                     # confirm you're using venv python
+pip freeze                        # list installed packages
+pip freeze > requirements.txt     # save package list to file
+pip install -r requirements.txt   # install from requirements file
+```
+==================================================
+## HEREDOC — write multi-line content to a file
+==================================================
+
+```bash
+cat > filename << 'EOF'
+line one
+line two
+line three
+EOF
+```
+
+==================================================
+## SYSTEM INFO COMMANDS
+==================================================
+
+```bash
+stat -c%s filename        # file size in bytes
+du -h filename            # file size human readable
+du -sh folder             # folder size human readable
+df -h                     # disk usage human readable
+free -h                   # memory usage human readable
+```
+==================================================
+## KEY PRINCIPLES — never forget these
+==================================================
+
+```bash
+Always know where you are         # pwd before anything on an unfamiliar server
+Pipes are your most powerful tool # chain commands instead of writing scripts
+Full paths in cron                # cron has no context — always absolute paths
+Virtual environments always       # never install packages system-wide
+
+> overwrites                      # replaces file contents
+>> appends                        # adds to existing file contents
+
+Exit codes matter                 # 0 = success, anything else = failure
+Never commit secrets              # .env, API keys, passwords in .gitignore
+kill -9 is last resort            # try normal kill first
+
+Pseudocode before code            # always plan logic first
+DRY                               # Don’t Repeat Yourself
+Separate config from code         # never hardcode changing values
+
+Read logs first                   # errors are usually already logged
+Test in dev before prod           # never experiment in production
+Automate repetitive work          # if repeated often, script it
+
+Small changes are safer           # easier to debug and rollback
+Backups must be tested            # restores matter more than backups
+Least privilege always            # minimum permissions required
+
+Document important things         # future you will forget
+Version control everything        # scripts, configs, infrastructure
+Monitor before users complain     # alerts should detect issues early
+```
+
+==================================================
+## SYSTEM INFO COMMANDS
+==================================================
+
+```bash
+stat -c%s filename                # file size in bytes
+du -h filename                    # file size human readable
+du -sh folder                     # folder size human readable
+
+df -h                             # disk usage human readable
+free -h                           # memory usage human readable
+
+uptime                            # system uptime and load
+top                               # live process monitoring
+htop                              # improved process viewer
+
+ps aux                            # running processes
+ps aux | grep nginx               # find specific process
+
+uname -a                          # kernel/system info
+hostnamectl                       # hostname and OS info
+
+ip a                              # network interfaces
+ss -tulpn                         # listening ports/services
+
+whoami                            # current user
+id                                # user and group IDs
+```
