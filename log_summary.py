@@ -1,4 +1,4 @@
-# log_summary.py
+# log_summary.py - version B
 # Reads a log file and prints a summary of each status level
 
 import sys
