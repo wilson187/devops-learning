@@ -1,4 +1,4 @@
-# log_summary.py - verison A
+# log_summary.py
 # Reads a log file and prints a summary of each status level
 
 import sys
